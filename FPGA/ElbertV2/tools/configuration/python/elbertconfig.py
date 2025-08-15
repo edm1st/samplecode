@@ -198,7 +198,11 @@ class ElbertConfigDownloader:
 		#before sending the last command. Input buffer can flushed by either calling 
 		#FlushInBuffer() routine or by reading large enough data from the input buffer.
 		#In most cases, simply calling CheckStatus() should clear the input buffer.
-		response = self.PortObj.ReadData(100)
+		# Use the driver's ReadData helper to fetch the response bytes
+		# from the serial port. ``serial.Serial`` exposes ``read`` and
+		# does not provide a ``ReadData`` method, so the previous call
+		# would raise an AttributeError.
+		response = self.ReadData(100)
 		print (response)
 		if len(response) > 38:
 			return 1

@@ -171,7 +171,9 @@ class MimasV2ConfigDownloader:
 		#before sending the last command. Input buffer can flushed by either calling 
 		#FlushInBuffer() routine or by reading large enough data from the input buffer.
 		#In most cases, simply calling CheckStatus() should clear the input buffer.
-		response = mimasport.ReadData(100)
+		# Fetch the response bytes using our wrapper's ReadData method
+		# rather than an undefined external reference.
+		response = self.ReadData(100)
 		print (response)
 		if len(response) > 38:
 			return 1
