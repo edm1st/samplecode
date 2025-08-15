@@ -29,13 +29,20 @@ void loop()
       Serial.readBytesUntil(13, Input, 2);  // Read bytes until pressed ENTER
       int State = Input[1] - 48;
       int RelayNum = Input[0]-48;
-      if((State == 0) || (State == 1))
+      if (RelayNum < 0 || RelayNum >= 2)
       {
-         digitalWrite(RelayPins[RelayNum], State);  // Make Relay ON or OFF
+         Serial.println("Invalid relay number");
       }
       else
       {
-        Serial.println("Incorrect parameter");
+         if((State == 0) || (State == 1))
+         {
+            digitalWrite(RelayPins[RelayNum], State);  // Make Relay ON or OFF
+         }
+         else
+         {
+            Serial.println("Incorrect parameter");
+         }
       }
       
       Status = String("Relay ") + String(RelayNum) + String(" State is set to ") + String(State);
