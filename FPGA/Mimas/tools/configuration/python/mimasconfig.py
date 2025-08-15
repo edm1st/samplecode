@@ -134,10 +134,10 @@ class MimasConfigDownloader:
 			
 	def SendData(self, Data):
 		'The lowest level routine to send raw data to Mimas'
-		'Returns total number of writes written'
+		'Returns total number of bytes written'
 		i = 0
 		bytesWritten = 0;
-		#Send data 30 bytes at a time. Mimas can recieve maximum 30 bytes per transaction
+		#Send data 30 bytes at a time. Mimas can receive maximum 30 bytes per transaction
 		while i < len(Data):
 			bytesWritten += self.PortObj.write(Data[i:i+30])
 			i += 30
