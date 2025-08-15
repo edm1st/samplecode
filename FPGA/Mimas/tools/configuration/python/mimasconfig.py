@@ -197,7 +197,11 @@ class MimasConfigDownloader:
 		#before sending the last command. Input buffer can flushed by either calling 
 		#FlushInBuffer() routine or by reading large enough data from the input buffer.
 		#In most cases, simply calling CheckStatus() should clear the input buffer.
-		response = self.PortObj.ReadData(100)
+		# Read the response bytes from the serial port using our helper
+		# method. The ``serial.Serial`` object does not provide a
+		# ``ReadData`` attribute, so referencing it directly would raise
+		# an AttributeError.
+		response = self.ReadData(100)
 		print (response)
 		if len(response) > 38:
 			return 1
