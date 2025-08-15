@@ -104,11 +104,12 @@ static u32 RotateRight(u32 Input, u8 Width);
 *****************************************************************************/
 int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 {
-	u32 I;
-	u32 J;
-	u32 Val;
-	u32 FirtVal;
-	u32 Word;
+        u32 I;
+        u32 J;
+        u32 Val;
+        u32 FirtVal;
+        u32 Word;
+        u32 Max;
 
 	Xil_AssertNonvoid(Words != 0);
 	Xil_AssertNonvoid(Subtest <= XIL_TESTMEM_MAXTEST);
@@ -116,8 +117,10 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 	/*
 	 * variable initialization
 	 */
-	Val = XIL_TESTMEM_INIT_VALUE;
-	FirtVal = XIL_TESTMEM_INIT_VALUE;
+        Val = XIL_TESTMEM_INIT_VALUE;
+        FirtVal = XIL_TESTMEM_INIT_VALUE;
+        /* Limit iterations to prevent overrunning when fewer than 32 words */
+        Max = (Words < 32U) ? Words : 32U;
 
 	/*
 	 * Select the proper Subtest
@@ -180,7 +183,7 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 		 * test Patterns for walking ones test
 		 */
 		
-		for (J = 0L; J < 32; J++) {
+                for (J = 0L; J < Max; J++) {
 			/*
 			 * Generate an initial value for walking ones test
 			 * to test for bad data bits
@@ -193,7 +196,7 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 			 * Write a one to each data bit indifferent locations
 			 */
 
-			for (I = 0L; I < 32; I++) {
+                        for (I = 0L; I < Max; I++) {
 				/* write memory location */
 				Addr[I] = Val;
 				Val = (u32) RotateLeft(Val, 32);
@@ -207,7 +210,7 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 
 			/* Read the values from each location that was
 			 * written */
-			for (I = 0L; I < 32; I++) {
+                        for (I = 0L; I < Max; I++) {
 				/* read memory location */
 				
 				Word = Addr[I];
@@ -234,7 +237,7 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 		 * initial test Patterns for walking zeros test
 		 */
 
-		for (J = 0L; J < 32; J++) {
+                for (J = 0L; J < Max; J++) {
 
 			/*
 			 * Generate an initial value for walking ones test
@@ -248,7 +251,7 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 			 * Write a one to each data bit indifferent locations
 			 */
 			
-			for (I = 0L; I < 32; I++) {
+                        for (I = 0L; I < Max; I++) {
 				/* write memory location */
 				Addr[I] = Val;
 				Val = ~((u32)RotateLeft(~Val, 32));
@@ -263,7 +266,7 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 
 			/* Read the values from each location that was
 			 * written */
-			for (I = 0L; I < 32; I++) {
+                        for (I = 0L; I < Max; I++) {
 				/* read memory location */
 				Word = Addr[I];
 				if (Word != Val) {
